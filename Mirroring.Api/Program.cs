@@ -21,9 +21,14 @@ var summaries = new[]
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
 
-app.MapGet("/weatherforecast", () =>
+app.MapGet("/weatherforecast", (HttpContext context) =>
     {
         Console.WriteLine($"Not Mirroring is called {DateTime.Now}");
+        foreach(var header in context.Request.Headers)
+        {
+            Console.WriteLine($"Not Mirror: {header.Key}: {header.Value}");
+        }
+        
         var forecast = Enumerable.Range(1, 5).Select(index =>
                 new WeatherForecast
                 (
@@ -36,9 +41,13 @@ app.MapGet("/weatherforecast", () =>
     })
     .WithName("GetWeatherForecast");
 
-app.MapGet("/mirror/weatherforecast", () =>
+app.MapGet("/mirror/weatherforecast", (HttpContext context) =>
     {
         Console.WriteLine($"Mirroring is called {DateTime.Now}");
+        foreach(var header in context.Request.Headers)
+        {
+            Console.WriteLine($"Mirror: {header.Key}: {header.Value}");
+        }
         var forecast = Enumerable.Range(1, 5).Select(index =>
                 new WeatherForecast
                 (
